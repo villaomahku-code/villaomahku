@@ -1,10 +1,10 @@
 import React from "react";
+import Navbar from "@/components/sections/Navbar";
+import Hero from "@/components/sections/Hero";
 
 // TODO: Kita akan membuka comment (uncomment) baris-baris ini 
 // satu per satu di step berikutnya saat file-nya sudah dibuat.
 
-// import Navbar from "@/components/sections/Navbar";
-// import Hero from "@/components/sections/Hero";
 // import About from "@/components/sections/About";
 // import Highlights from "@/components/sections/Highlights";
 // import Rooms from "@/components/sections/Rooms";
@@ -19,10 +19,11 @@ import React from "react";
 export default function Home() {
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar />
 
       <main className="relative flex min-h-screen w-full flex-col overflow-hidden bg-cream">
-        {/* <Hero /> */}
+        <Hero /> 
+        
         {/* <About /> */}
         {/* <Highlights /> */}
         {/* <Rooms /> */}
@@ -33,17 +34,14 @@ export default function Home() {
         {/* <Testimonials /> */}
         {/* <CTA /> */}
 
-        {/* --- TAMPILAN SEMENTARA --- */}
-        {/* Hapus bagian ini nanti saat Hero section sudah dibuat */}
-        <section className="flex min-h-screen flex-col items-center justify-center p-8 text-center">
-          <h1 className="font-serif text-4xl font-bold text-villa-900 md:text-6xl mb-4">
-            Villa Omahku Sumberejo
-          </h1>
-          <p className="font-sans text-lg text-villa-700 max-w-xl">
-            Struktur utama app/page.tsx sudah siap. Menunggu komponen-komponen lain dirakit.
-          </p>
+        {/* --- Area Konten Bawah (Dummy untuk test scroll) --- */}
+        <section className="min-h-[100vh] p-8 text-center flex flex-col justify-center">
+           <h2 className="text-3xl text-villa-900 font-serif mb-4">Area Konten Bawah</h2>
+           <p className="text-charcoal max-w-2xl mx-auto">
+             Scroll ke atas untuk melihat Hero Section. Perhatikan bagaimana Navbar berubah transparan saat berada di paling atas.
+           </p>
         </section>
-        {/* ------------------------- */}
+
       </main>
 
       {/* <Footer /> */}

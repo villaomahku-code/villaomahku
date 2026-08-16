@@ -1,11 +1,67 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Palet warna alam (Forest, Leaf, Sage) */
+  --color-villa-50: #F7F9F6;
+  --color-villa-100: #EAEFE8;
+  --color-villa-200: #D2DFCE;
+  --color-villa-300: #AEC6A8;
+  --color-villa-400: #84A67C;
+  --color-villa-500: #62895A;
+  --color-villa-600: #4A6C43;
+  --color-villa-700: #3A5435;
+  --color-villa-800: #30442D;
+  --color-villa-900: #283826;
+  --color-villa-950: #151F14;
+  
+  /* Warna Dasar */
+  --color-cream: #FAF9F6;
+  --color-charcoal: #2D3748;
+
+  /* Typography */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+}
 
 @layer base {
   /* Ubah warna highlight teks (selection) agar matching dengan tema */
   ::selection {
     background-color: #62895A;
     color: #FAF9F6;
+  }
+}
+/* --- ANIMASI KABUT (MIST EFFECT) --- */
+@layer utilities {
+  .animate-mist-1 {
+    animation: mist 30s linear infinite alternate;
+  }
+  .animate-mist-2 {
+    animation: mist 45s linear infinite alternate-reverse;
+  }
+  .animate-mist-3 {
+    animation: mist 60s linear infinite alternate;
+  }
+}
+
+@keyframes mist {
+  0% {
+    transform: translateX(-10%) translateY(5%) scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translateX(10%) translateY(-5%) scale(1.1);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateX(-10%) translateY(5%) scale(1);
+    opacity: 0.1;
+  }
+}
+
+/* Mengurangi animasi untuk pengguna yang sensitif terhadap gerakan */
+@media (prefers-reduced-motion: reduce) {
+  .animate-mist-1, .animate-mist-2, .animate-mist-3 {
+    animation: none !important;
+    opacity: 0.15 !important;
   }
 }

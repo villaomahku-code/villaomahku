@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "@/context/LanguageContext"; // <-- Import Provider
 
-// Setup font Inter untuk body/paragraf
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 });
 
-// Setup font Playfair Display untuk Heading/Elegan
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
@@ -28,11 +27,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="scroll-smooth">
-      {/* Menggabungkan variabel font dan memberikan warna default */}
       <body
         className={`${inter.variable} ${playfair.variable} font-sans bg-cream text-charcoal antialiased`}
       >
-        {children}
+        {/* Bungkus aplikasi dengan Provider Bahasa */}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
       </body>
     </html>
   );

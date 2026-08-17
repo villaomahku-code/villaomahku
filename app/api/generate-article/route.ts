@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     Tugas Anda: Buatlah sebuah artikel/berita blog berdasarkan topik dari pengguna.
     
     WAJIB KEMBALIKAN DALAM FORMAT JSON MURNI DENGAN STRUKTUR INI (Tanpa awalan \`\`\`json):
-    {
+    { 
       "titleId": "Judul artikel bahasa Indonesia yang menarik",
       "titleEn": "English translated attractive title",
       "contentId": "Isi artikel bahasa Indonesia. Terdiri dari 2 atau 3 paragraf. Gunakan bahasa yang hangat, elegan, dan mengundang orang untuk menginap.",

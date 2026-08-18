@@ -22,6 +22,7 @@ export interface Article {
     name_id: string;
     name_en: string;
     image_url: string;
+    image_360_url?: string;
     capacity: string;
     bed_detail: string;
     view_detail: string;

@@ -18,7 +18,7 @@ export default function Hero() {
   const waLink = getWhatsAppLink(WA_MESSAGES.booking);
   
   const [data, setData] = useState<any>(DEFAULT_HERO);
-  const [bgImg, setBgImg] = useState("/images/hero-bg.jpg");
+  const [bgImg, setBgImg] = useState("/images/");
 
   useEffect(() => {
     supabase.from("page_content").select("*").eq("section_name", "hero").single()

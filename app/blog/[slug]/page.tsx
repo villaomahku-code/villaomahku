@@ -11,7 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import { Article } from "@/types/schema";
 import { ArrowLeft, Loader2 } from "lucide-react";
-
+export const runtime = "edge";
 export default function ArticleReadPage() {
   const { slug } = useParams();
   const { language } = useLanguage();

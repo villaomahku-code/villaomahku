@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { LanguageProvider } from "@/context/LanguageContext"; // <-- Import Provider
+import { LanguageProvider } from "@/context/LanguageContext";
+import AIChat from "@/components/ui/AIChat"; // <-- Import komponen AI Chat
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,6 +34,9 @@ export default function RootLayout({
         {/* Bungkus aplikasi dengan Provider Bahasa */}
         <LanguageProvider>
           {children}
+          
+          {/* Widget Chat AI yang muncul di seluruh halaman */}
+          <AIChat />
         </LanguageProvider>
       </body>
     </html>

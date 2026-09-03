@@ -49,9 +49,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-villa-50 flex">
       <AdminSidebar />
       {/* Konten utama bergeser ke kanan di mode Desktop untuk memberi ruang Sidebar */}
-      <main className="flex-1 lg:ml-64 pt-20 lg:pt-8 px-6 lg:px-10 pb-10 transition-all overflow-hidden">
-        {children}
-      </main>
+      <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
+        <main className="flex-1 pt-24 lg:pt-10 px-6 lg:px-10 pb-10 overflow-x-hidden">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

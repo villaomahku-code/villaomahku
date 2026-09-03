@@ -1,67 +1,92 @@
 @import "tailwindcss";
 
 @theme {
-  /* Palet warna alam (Forest, Leaf, Sage) */
-  --color-villa-50: #F7F9F6;
-  --color-villa-100: #EAEFE8;
-  --color-villa-200: #D2DFCE;
-  --color-villa-300: #AEC6A8;
-  --color-villa-400: #84A67C;
-  --color-villa-500: #62895A;
-  --color-villa-600: #4A6C43;
-  --color-villa-700: #3A5435;
-  --color-villa-800: #30442D;
-  --color-villa-900: #283826;
-  --color-villa-950: #151F14;
-  
-  /* Warna Dasar */
-  --color-cream: #FAF9F6;
-  --color-charcoal: #2D3748;
+  /* =========================================
+     1. TEMA "RUSTIC INDUSTRIAL ELEGANCE"
+     (Terracotta, Wood, and Warm Iron accents)
+     ========================================= */
+  --color-villa-50: #F9F6F0;   /* Sangat terang, hint beige */
+  --color-villa-100: #EFE9DE;  /* Krem acian semen lembut */
+  --color-villa-200: #DFD3C3;  /* Beige / Pasir */
+  --color-villa-300: #D99C79;  /* Terracotta terang */
+  --color-villa-400: #C87A54;  /* Terracotta medium */
+  --color-villa-500: #B35D38;  /* WARNA AKSEN UTAMA: Terracotta / Bata Merah Rustic */
+  --color-villa-600: #94492A;  /* Hover Terracotta */
+  --color-villa-700: #73371D;  /* Kayu jati / Coklat tua */
+  --color-villa-800: #4A352B;  /* Besi tempa hangat */
+  --color-villa-900: #2D211A;  /* Espresso / Baja hitam (Teks Heading) */
+  --color-villa-950: #1C1410;  /* Hitam arang / Charcoal sangat gelap */
 
-  /* Typography */
+  /* =========================================
+     2. WARNA DASAR (Warm Cream & Beige)
+     ========================================= */
+  --color-cream: #F8F6F1;      /* Background utama yang sangat soft (Off-white beige) */
+  --color-cream-50: #FFFFFF;   /* Putih murni untuk kontras jika diperlukan */
+  --color-cream-100: #F5F2EB;  /* Background alternatif (Krem hangat) */
+  --color-cream-200: #EAE4D9;  /* Abu-abu beige (warna beton bersih) */
+  --color-cream-300: #D8CEBE;
+
+  /* =========================================
+     3. WARNA TEKS PARAGRAF (Warm Charcoal)
+     ========================================= */
+  --color-charcoal: #423E3B;   /* Abu-abu kecoklatan, tidak bikin mata sakit */
+  --color-charcoal-50: #F6F5F4;
+  --color-charcoal-100: #EBEAE8;
+  --color-charcoal-500: #87817D;
+  --color-charcoal-900: #2A2624;
+
+  /* =========================================
+     4. TYPOGRAPHY
+     ========================================= */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+
+  /* =========================================
+     5. ANIMATION (MIST EFFECT)
+     ========================================= */
+  --animate-mist-1: mist 30s linear infinite alternate;
+  --animate-mist-2: mist 45s linear infinite alternate-reverse;
+  --animate-mist-3: mist 60s linear infinite alternate;
+
+  @keyframes mist {
+    0% { transform: translateX(-10%) translateY(5%) scale(1); opacity: 0.1; }
+    50% { transform: translateX(10%) translateY(-5%) scale(1.1); opacity: 0.25; }
+    100% { transform: translateX(-10%) translateY(5%) scale(1); opacity: 0.1; }
+  }
 }
 
+/* =========================================
+   6. GLOBAL BASE STYLES
+   ========================================= */
 @layer base {
-  /* Ubah warna highlight teks (selection) agar matching dengan tema */
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+  }
+
   ::selection {
-    background-color: #62895A;
-    color: #FAF9F6;
+    background-color: var(--color-villa-500); /* Highlight teks warna Terracotta */
+    color: var(--color-cream-50);
   }
-}
-/* --- ANIMASI KABUT (MIST EFFECT) --- */
-@layer utilities {
-  .animate-mist-1 {
-    animation: mist 30s linear infinite alternate;
-  }
-  .animate-mist-2 {
-    animation: mist 45s linear infinite alternate-reverse;
-  }
-  .animate-mist-3 {
-    animation: mist 60s linear infinite alternate;
-  }
-}
 
-@keyframes mist {
-  0% {
-    transform: translateX(-10%) translateY(5%) scale(1);
-    opacity: 0.1;
+  /* PAKSA OVERRIDE CLASS BAWAAN KOMPONEN */
+  .bg-white { background-color: var(--color-cream-50) !important; }
+  .text-white { color: var(--color-cream-50) !important; }
+  
+  /* Ganti semua background gelap bawaan tailwind menjadi warna dasar krem / beige */
+  .bg-gray-900, .bg-slate-900, .bg-zinc-900, .bg-neutral-900, .bg-black {
+    background-color: var(--color-cream-100) !important;
   }
-  50% {
-    transform: translateX(10%) translateY(-5%) scale(1.1);
-    opacity: 0.35;
-  }
-  100% {
-    transform: translateX(-10%) translateY(5%) scale(1);
-    opacity: 0.1;
-  }
-}
 
-/* Mengurangi animasi untuk pengguna yang sensitif terhadap gerakan */
-@media (prefers-reduced-motion: reduce) {
-  .animate-mist-1, .animate-mist-2, .animate-mist-3 {
-    animation: none !important;
-    opacity: 0.15 !important;
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .animate-mist-1, .animate-mist-2, .animate-mist-3 {
+      animation: none !important; opacity: 0.15 !important; transform: none !important;
+    }
   }
 }

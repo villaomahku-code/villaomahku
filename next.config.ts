@@ -1,20 +1,20 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "izmvbsuvtsgziwegkdmq.supabase.co", 
-        port: "",
-        pathname: "/storage/v1/object/public/**", 
+        hostname: "izmvbsuvtsgziwegkdmq.supabase.co",
+        pathname: "/storage/v1/object/public/**",
       },
       {
         protocol: "https",
         hostname: "image.pollinations.ai", // Izin untuk AI Image Generator
-        port: "",
         pathname: "/**",
-      }
+      },
     ],
   },
 };
+
 export default nextConfig;

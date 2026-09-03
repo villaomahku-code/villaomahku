@@ -13,7 +13,7 @@ export default function AdminSidebar() {
 
   const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
-    { name: "Kelola Halaman", icon: MonitorPlay, href: "/admin/pages" }, // Menu Baru
+    { name: "Kelola Halaman", icon: MonitorPlay, href: "/admin/pages" },
     { name: "Kelola Ruangan", icon: BedDouble, href: "/admin/rooms" },
     { name: "Kelola Artikel", icon: FileText, href: "/admin/articles" },
     { name: "Kelola Galeri", icon: ImagePlus, href: "/admin/gallery" },
@@ -38,7 +38,7 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      <div className="flex-1 py-6 px-4 space-y-2">
+      <div className="flex-1 py-6 px-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
@@ -73,20 +73,26 @@ export default function AdminSidebar() {
 
   return (
     <>
+      {/* Mobile Navbar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-villa-100 z-50 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Leaf className="text-villa-600" size={20} />
           <span className="font-serif font-bold text-villa-900">Omahku Admin</span>
         </div>
-        <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-villa-900">
+        <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-villa-900 focus:outline-none">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
+      {/* Mobile Overlay */}
       {isOpen && (
-        <div className="lg:hidden fixed inset-0 bg-villa-950/20 backdrop-blur-sm z-40" onClick={() => setIsOpen(false)} />
+        <div 
+          className="lg:hidden fixed inset-0 bg-villa-950/20 backdrop-blur-sm z-40 transition-opacity" 
+          onClick={() => setIsOpen(false)} 
+        />
       )}
 
+      {/* Sidebar (Fixed Desktop & Sliding Mobile) */}
       <aside
         className={`fixed top-0 bottom-0 left-0 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"

@@ -1,115 +1,133 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, Variants } from "framer-motion";
-import { Users, BedDouble, MountainSnow, Loader2, View, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Users, BedDouble, MountainSnow, View, X, Sparkles, MapPin, Maximize2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { supabase } from "@/lib/supabase";
-import { VillaRoom } from "@/types/schema";
 import { getWhatsAppLink } from "@/data/config";
 import VirtualTour from "@/components/ui/VirtualTour";
 
-export default function Rooms() {
-  const { language } = useLanguage();
-  const [rooms, setRooms] = useState<VillaRoom[]>([]);
-  const [loading, setLoading] = useState(true);
+const FadeUp = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
+  <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, delay, ease: [0.21, 0.47, 0.32, 0.98] }} className={className}>
+    {children}
+  </motion.div>
+);
+
+export default function Rooms({ data }: { data?: any[] }) {
+  const { language } = useLanguage() as { language: "id" | "en" };
+  const lang = language || "id";
   
-  // State untuk Modal 360
   const [selected360, setSelected360] = useState<string | null>(null);
+  const [selectedGalleryImage, setSelectedGalleryImage] = useState<string | null>(null);
 
   const content = {
-    id: { eyebrow: "Eksplorasi Villa", heading: "Fasilitas & Kamar Tidur", buttonWa: "Reservasi Villa Ini" },
-    en: { eyebrow: "Explore The Villa", heading: "Spaces & Bedrooms", buttonWa: "Book This Villa" }
-  }[language];
+    id: { eyebrow: "Eksplorasi Villa", heading: "Fasilitas & Kamar Tidur", buttonWa: "Reservasi" },
+    en: { eyebrow: "Explore The Villa", heading: "Spaces & Bedrooms", buttonWa: "Book" }
+  }[lang];
 
-  useEffect(() => {
-    const fetchRooms = async () => {
-      const { data } = await supabase.from("villa_rooms").select("*").order("created_at", { ascending: true });
-      if (data) setRooms(data);
-      setLoading(false);
-    };
-    fetchRooms();
-  }, []);
-
-  const headerVariants: Variants = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } };
-  const cardVariants: Variants = { hidden: { opacity: 0, y: 40 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } } };
+  if (!data || data.length === 0) return null;
 
   return (
-    <section id="rooms" className="relative w-full bg-villa-50 py-24 lg:py-32">
-      <div className="container mx-auto px-6 md:px-12">
-        <motion.div variants={headerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} className="mb-16 md:mb-20 text-center">
-          <span className="mb-4 inline-block text-sm font-semibold uppercase tracking-widest text-villa-500">{content.eyebrow}</span>
-          <h2 className="font-serif text-3xl font-bold text-villa-900 md:text-5xl">{content.heading}</h2>
-        </motion.div>
+    <section id="rooms" className="py-24 md:py-32 bg-cream-100 text-charcoal px-6">
+      <div className="max-w-7xl mx-auto">
+        
+        <FadeUp className="text-center mb-16 md:mb-24">
+          <h3 className="text-villa-500 font-bold tracking-[0.2em] uppercase text-xs mb-4">{content.eyebrow}</h3>
+          <h2 className="text-4xl md:text-6xl font-serif font-bold text-villa-900">{content.heading}</h2>
+        </FadeUp>
 
-        {loading ? (
-          <div className="flex justify-center items-center h-64"><Loader2 size={40} className="animate-spin text-villa-300" /></div>
-        ) : (
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:gap-16">
-            {rooms.map((room, index) => {
-              const name = language === "id" ? room.name_id : room.name_en;
-              const desc = language === "id" ? room.description_id : room.description_en;
-              const waLink = getWhatsAppLink(`Halo Villa Omahku, saya tertarik dengan ${name} dan ingin bertanya tentang reservasi villanya.`);
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+          {data.map((room, idx) => {
+            const name = lang === "id" ? room.name_id : room.name_en;
+            const desc = lang === "id" ? room.description_id : room.description_en;
+            const capacity = lang === "id" ? room.capacity_id : room.capacity_en;
+            const bedDetail = lang === "id" ? room.bed_detail_id : room.bed_detail_en;
+            const viewDetail = lang === "id" ? room.view_detail_id : room.view_detail_en;
+            const isFacility = room.category === 'facility';
+            const waLink = getWhatsAppLink(`Halo Villa Omahku, saya tertarik dengan ${isFacility ? 'Fasilitas' : 'Kamar tipe'} ${name} dan ingin bertanya lebih detail.`);
 
-              return (
-                <motion.div key={room.id} variants={cardVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} transition={{ delay: index * 0.2 }} className="group flex flex-col overflow-hidden rounded-[2.5rem] bg-white shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1 border border-villa-100">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden">
-                    <Image src={room.image_url} alt={name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-white via-white/70 to-transparent z-10" />
-                    
-                    {/* Tombol 360 muncul jika data image_360_url ada */}
+            return (
+              <FadeUp key={room.id} delay={idx * 0.1}>
+                <div className="group flex flex-col h-full bg-white rounded-3xl p-5 border border-villa-200 shadow-sm hover:shadow-xl hover:border-villa-300 transition-all">
+                  
+                  <div className="relative w-full aspect-[4/3] overflow-hidden rounded-2xl mb-6 shadow-md">
+                    <Image src={room.image_url} alt={name} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
                     {room.image_360_url && (
-                      <button 
-                        onClick={() => setSelected360(room.image_360_url!)}
-                        className="absolute top-6 right-6 z-20 flex items-center gap-2 bg-villa-950/80 hover:bg-villa-600 text-white backdrop-blur-md px-4 py-2.5 rounded-full text-xs font-bold uppercase tracking-wide transition-all shadow-lg hover:scale-105"
-                      >
-                        <View size={16} /> Virtual 360°
+                      <button onClick={() => setSelected360(room.image_360_url!)} className="absolute top-4 left-4 bg-white/70 hover:bg-white text-villa-900 backdrop-blur-md border border-white/50 text-[10px] uppercase tracking-widest font-bold px-4 py-2 rounded-full flex items-center gap-2 transition-colors">
+                        <View size={14} /> 360° View
                       </button>
                     )}
-                  </div>
-
-                  <div className="relative z-20 flex flex-1 flex-col p-8 md:p-10 pt-0 md:pt-0">
-                    <h3 className="mb-4 font-serif text-2xl font-bold text-villa-900">{name}</h3>
-                    <div className="mb-6 flex flex-wrap gap-4 text-sm font-medium text-villa-700">
-                      <span className="flex items-center gap-2 rounded-full bg-villa-50 px-3 py-1.5"><Users size={16} /> {room.capacity}</span>
-                      <span className="flex items-center gap-2 rounded-full bg-villa-50 px-3 py-1.5"><BedDouble size={16} /> {room.bed_detail}</span>
-                      <span className="flex items-center gap-2 rounded-full bg-villa-50 px-3 py-1.5"><MountainSnow size={16} /> {room.view_detail}</span>
+                    <div className="absolute bottom-4 right-4 bg-villa-500 text-white text-[9px] uppercase tracking-[0.2em] font-bold px-3 py-1.5 rounded-full shadow-lg">
+                      {isFacility ? (lang === 'id' ? 'Fasilitas' : 'Facility') : (lang === 'id' ? 'Kamar' : 'Bedroom')}
                     </div>
-                    <p className="mb-8 font-sans text-charcoal/80 leading-relaxed flex-1">{desc}</p>
-                    <a href={waLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-villa-900 px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-villa-600">
-                      {content.buttonWa} <span className="text-lg leading-none transition-transform group-hover:translate-x-1">→</span>
-                    </a>
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        )}
+                  
+                  <div className="flex flex-col flex-1">
+                    <h3 className="text-2xl font-serif font-bold text-villa-900 group-hover:text-villa-600 transition-colors mb-3">{name}</h3>
+                    <p className="text-charcoal/70 text-sm line-clamp-3 leading-relaxed font-light mb-6 flex-1">{desc}</p>
+                    
+                    <div className="flex flex-wrap gap-4 text-xs font-medium text-villa-700 pt-4 border-t border-villa-100">
+                      <span className="flex items-center gap-1.5 bg-villa-50 px-3 py-1.5 rounded-full ring-1 ring-villa-200">
+                        <Users size={14}/> {capacity || room.capacity || "-"}
+                      </span>
+                      <span className="flex items-center gap-1.5 bg-villa-50 px-3 py-1.5 rounded-full ring-1 ring-villa-200">
+                        {isFacility ? <Sparkles size={14}/> : <BedDouble size={14}/>} {bedDetail || room.bed_detail || "-"}
+                      </span>
+                      <span className="flex items-center gap-1.5 bg-villa-50 px-3 py-1.5 rounded-full ring-1 ring-villa-200">
+                        {isFacility ? <MapPin size={14}/> : <MountainSnow size={14}/>} {viewDetail || room.view_detail || "-"}
+                      </span>
+                    </div>
+
+                    {room.gallery_urls && room.gallery_urls.length > 0 && (
+                      <div className="mt-6 pt-6 border-t border-villa-100">
+                        <p className="text-[10px] font-bold text-charcoal/50 uppercase tracking-widest mb-3">Lebih Banyak Foto</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {room.gallery_urls.map((url: string, i: number) => (
+                            <div key={i} onClick={() => setSelectedGalleryImage(url)} className="relative aspect-square rounded-xl overflow-hidden cursor-zoom-in group/img ring-1 ring-villa-200 hover:ring-villa-400 transition-all">
+                              {/* Perbaikan Peringatan "sizes" di sini */}
+                              <Image src={url} alt={`Gallery ${i}`} fill sizes="(max-width: 768px) 30vw, 10vw" className="object-cover group-hover/img:scale-110 transition-transform duration-500" />
+                              <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/20 transition-colors flex items-center justify-center">
+                                <Maximize2 size={16} className="text-white opacity-0 group-hover/img:opacity-100 transition-opacity" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="mt-6">
+                      <a href={waLink} target="_blank" rel="noopener noreferrer" className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-villa-500 hover:bg-villa-600 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white transition-colors border border-transparent hover:shadow-lg hover:shadow-villa-500/30">
+                        {content.buttonWa}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </FadeUp>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Modal Penampil 360 Derajat */}
+      <AnimatePresence>
+        {selectedGalleryImage && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedGalleryImage(null)} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-10 cursor-zoom-out">
+            <button onClick={() => setSelectedGalleryImage(null)} className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white text-white hover:text-black rounded-full transition-colors z-50"><X size={24} /></button>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} transition={{ type: "spring", damping: 25, stiffness: 300 }} className="relative w-full max-w-5xl h-[80vh] rounded-2xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <Image src={selectedGalleryImage} alt="Enlarged" fill sizes="100vw" className="object-contain" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {selected360 && (
-          <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10">
             <div className="relative w-full h-full max-w-7xl max-h-[80vh] bg-black rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/20">
-              <button 
-                onClick={() => setSelected360(null)}
-                className="absolute top-6 right-6 z-50 p-3 bg-white/10 hover:bg-red-500 text-white rounded-full transition-colors backdrop-blur-md"
-              >
-                <X size={24} />
-              </button>
-              
-              <div className="absolute top-6 left-6 z-50 bg-black/50 text-white px-4 py-2 rounded-full text-sm font-bold backdrop-blur-md flex items-center gap-2 pointer-events-none">
-                <View size={16} /> Geser layar untuk melihat
-              </div>
-
-              {/* Merender Pannellum Interaktif */}
+              <button onClick={() => setSelected360(null)} className="absolute top-6 right-6 z-50 p-3 bg-white/10 hover:bg-red-500 text-white rounded-full transition-colors"><X size={24} /></button>
+              <div className="absolute top-6 left-6 z-50 bg-black/50 text-white px-4 py-2 rounded-full text-sm font-bold backdrop-blur-md flex items-center gap-2 pointer-events-none"><View size={16} /> Geser layar untuk melihat</div>
               <VirtualTour imageUrl={selected360} />
-              
             </div>
           </motion.div>
         )}

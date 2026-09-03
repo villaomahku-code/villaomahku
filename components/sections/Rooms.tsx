@@ -6,7 +6,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Users, BedDouble, MountainSnow, View, X, Sparkles, MapPin, Maximize2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { getWhatsAppLink } from "@/data/config";
-import VirtualTour from "@/components/ui/VirtualTour";
+import dynamic from "next/dynamic";
+const VirtualTour = dynamic(() => import("@/components/ui/VirtualTour"), { 
+  ssr: false, 
+  loading: () => <div className="flex items-center justify-center h-full text-white text-xs tracking-widest uppercase">Memuat VR 360...</div> 
+});
 
 const FadeUp = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
   <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, delay, ease: [0.21, 0.47, 0.32, 0.98] }} className={className}>

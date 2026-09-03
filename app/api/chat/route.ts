@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { systemPrompt } from '@/data/ai-prompt';
 import { NextResponse } from 'next/server';
